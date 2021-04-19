@@ -1,0 +1,790 @@
+swagger: '2.0'
+info:
+  description: API OneUrbano
+  version: 1.0.0
+  title: API proyecto de automatización agricultura urbana OneUrbano
+  # put the contact info for your development or API team
+  contact:
+    email: rcoloniad@correo.udistrital.edu.co
+    
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+tags: 
+- name: Administrador
+  description: Propietario del cultivo
+  
+paths:
+  /Riego:
+    get:
+      tags:
+      - Administrador
+      summary: Buscar Riego
+      operationId: buscarRiego
+      description: |
+        Busca un riego generado
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: searchString
+        description: Pasa una cadena de búsqueda opcional para buscar un riego
+        required: false
+        type: string
+      - in: query
+        name: skip
+        description: Número de registros para omitir la paginación
+        type: integer
+        format: int32
+        minimum: 0
+      - in: query
+        name: limit
+        description: Número máximo de registros para devolver
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 50
+      responses:
+        200:
+          description: Resultados de búsqueda que coincidan con los registros
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Riego'
+        400:
+          description: Parámetro de entrada incorrecto
+    post:
+      tags:
+      - Administrador
+      summary: Adicionar un riego
+      operationId: addRiego
+      description: Adiciona un riego al sistema
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Riego
+        description: Adiciona un riego
+        schema:
+          $ref: '#/definitions/Riego'
+      responses:
+        201:
+          description: Riego creado
+          schema:
+            $ref: '#/definitions/ApiAlertariego'
+        400:
+          description: Entrada invalida, riego inválido
+        409:
+          description: El riego ya existe
+  /Mediciones:
+    get:
+      tags:
+      - Administrador
+      summary: Buscar Mediciones
+      operationId: buscarMediciones
+      description: |
+        Buscar una medición registrada
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: searchStringa
+        description: Pasa un acadena de búsqueda opcional para buscar una medición
+        required: false
+        type: string
+      - in: query
+        name: skip
+        description: Número de registros para omitir la paginación
+        type: integer
+        format: int32
+        minimum: 0
+      - in: query
+        name: limit
+        description: Número máximo de registros para devolver
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 50
+      responses:
+        200:
+          description: Resultados de búsqueda que coincidan con los registros
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Mediciones'
+        400:
+          description: Parámetro de entrada incorrecto
+    post:
+      tags:
+      - Administrador
+      summary: Adicionar una medición
+      operationId: addMediciones
+      description: Adiciona una medición al sistema
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Mediciones
+        description: Adiciona una medición
+        schema:
+          $ref: '#/definitions/Mediciones'
+      responses:
+        201:
+          description: Medición creada
+          schema:
+            $ref: '#/definitions/ApiAlertacultivo'
+        400:
+          description: Parámetro de entrada incorrecto
+        409:
+          description: La medición ya existe
+  /Cliente:
+    get:
+      tags:
+      - Administrador
+      summary: Buscar Cliente
+      operationId: buscarCliente
+      description: |
+        Busca un cliente creado
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: searchString
+        description: Pasa un acadena de búsqueda opcional para buscar un cliente
+        required: false
+        type: string
+      - in: query
+        name: skip
+        description: Número de registros para omitir la paginación
+        type: integer
+        format: int32
+        minimum: 0
+      - in: query
+        name: limit
+        description: Número máximo de registros para devolver
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 50
+      responses:
+        200:
+          description: Resultados de búsqueda que coincidan con los registros
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Cliente'
+        400:
+          description: Parámetro de entrada incorrecto
+    post:
+      tags:
+      - Administrador
+      summary: Adicionar un cliente
+      operationId: addCliente
+      description: Adiciona un cliente al sistema
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Cliente
+        description: Adiciona un cliente
+        schema:
+          $ref: '#/definitions/Cliente'
+      responses:
+        201:
+          description: Cliente creado
+        400:
+          description: Entrada invalida, actuador inválido
+        409:
+          description: El cliente ya existe
+    put:
+      tags:
+      - Administrador
+      summary: Actualizar Cliente
+      description: Esta acción solamente puede ser ejecutada por un usuario logueado.
+      operationId: actualizarCliente
+      produces:
+      - application/json
+      parameters:
+      - name: usuario
+        in: query
+        description: Usuario a actualizar
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: Objeto de ususario actualizado
+        required: true
+        schema:
+          $ref: '#/definitions/Cliente'
+      responses:
+        400:
+          description: Usuario proporcionado no válido
+        404:
+          description: Usuario no escontrado
+    delete:
+      tags:
+      - Administrador
+      summary: Borrar Cliente
+      description: Esta acción solamente puede ser realizada por el usuario logueado. 
+      operationId: borrarCliente
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: usuario
+        description: Usuario a borrar
+        required: true
+        type: string
+      responses:
+        400:
+          description: Usuario proporcionado no es válido
+        404:
+          description: Usuario no encontrado
+  /Actuador:
+    get:
+      tags:
+      - Administrador
+      summary: Buscar Actuador
+      operationId: buscarActuador
+      description: |
+        Buscar un actuador creado
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: searchString
+        description: Pasa un acadena de búsqueda opcional para buscar un Actuador
+        required: false
+        type: string
+      - in: query
+        name: skip
+        description: Número de registros para omitir la paginación
+        type: integer
+        format: int32
+        minimum: 0
+      - in: query
+        name: limit
+        description: Número máximo de registros para devolver
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 50
+      responses:
+        200:
+          description: Resultados de búsqueda que coincidan con los registros
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Actuador'
+        400:
+          description: Parámetro de entrada incorrecto
+    post:
+      tags:
+      - Administrador
+      summary: Adicionar un actuador
+      operationId: addActuador
+      description: Adiciona un actuador al sistema
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Actuador
+        description: Adiciona un actuador
+        schema:
+          $ref: '#/definitions/Actuador'
+      responses:
+        201:
+          description: Actuador creado
+        400:
+          description: Entrada invalida, actuador inválido
+        409:
+          description: El actuador ya existe
+    put:
+      tags:
+      - Administrador
+      summary: Actualizar Actuador
+      description: Esta acción solamente puede ser ejecutada por un usuario logueado.
+      operationId: actualizarActuador
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: query
+        description: Actuador a actualizar
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: Objeto de actuador actualizado
+        required: true
+        schema:
+          $ref: '#/definitions/Actuador'
+      responses:
+        400:
+          description: Actuador proporcionado no válido
+        404:
+          description: Actuador no escontrado      
+    delete:
+      tags:
+      - Administrador
+      summary: Borrar Actuador
+      description: Esta acción solamente puede ser realizada por el usuario logueado. 
+      operationId: borrarActuador
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: id
+        description: Actuador a borrar
+        required: true
+        type: string
+      responses:
+        400:
+          description: Actuador proporcionado no es válido
+        404:
+          description: Actuador no encontrado
+  /Controlador:
+    get:
+      tags:
+      - Administrador
+      summary: Buscar Controlador
+      operationId: buscarControlador
+      description: |
+        Buscar un controlador creado
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: searchString
+        description: Pasa un acadena de búsqueda opcional para buscar un controlador
+        required: false
+        type: string
+      - in: query
+        name: skip
+        description: Número de registros para omitir la paginación
+        type: integer
+        format: int32
+        minimum: 0
+      - in: query
+        name: limit
+        description: Número máximo de registros para devolver
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 50
+      responses:
+        200:
+          description: Resultados de búsqueda que coincidan con los registros
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Controlador'
+        400:
+          description: Parámetro de entrada incorrecto
+    post:
+      tags:
+      - Administrador
+      summary: Adicionar un controlador
+      operationId: addControlador
+      description: Adiciona un controlador al sistema
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Cultivo
+        description: Adiciona un controlador
+        schema:
+          $ref: '#/definitions/Controlador'
+      responses:
+        201:
+          description: Controlador creado
+        400:
+          description: Entrada invalida, cultivo inválido
+        409:
+          description: El controlador ya existe
+    put:
+      tags:
+      - Administrador
+      summary: Actualizar Controlador
+      description: Esta acción solamente puede ser ejecutada por un usuario logueado.
+      operationId: actualizarControlador
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: query
+        description: Controlador a actualizar
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: Objeto de controlador actualizado
+        required: true
+        schema:
+          $ref: '#/definitions/Controlador'
+      responses:
+        400:
+          description: Controlador proporcionado no válido
+        404:
+          description: Controlador no escontrado
+    delete:
+      tags:
+      - Administrador
+      summary: Borrar Controlador
+      description: Esta acción solamente puede ser realizada por el usuario logueado. 
+      operationId: borrarControlador
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: id
+        description: Controlador a borrar
+        required: true
+        type: string
+      responses:
+        400:
+          description: Controlador proporcionado no es válido
+        404:
+          description: Controlador no encontrado
+  /Cultivo:
+    get:
+      tags:
+      - Administrador
+      summary: Buscar Cultivo 
+      operationId: buscarCultivo
+      description: |
+        Busca un cultivo creado
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: searchString
+        description: Pasa un acadena de búsqueda opcional para buscar un cultivo
+        required: false
+        type: string
+      - in: query
+        name: skip
+        description: Número de registros para omitir la paginación
+        type: integer
+        format: int32
+        minimum: 0
+      - in: query
+        name: limit
+        description: Número máximo de registros para devolver
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 50
+      responses:
+        200:
+          description: Resultados de búsqueda que coincidan con los registros
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Cultivo'
+        400:
+          description: Parámetro de entrada incorrecto
+    post:
+      tags:
+      - Administrador
+      summary: Adicionar un cultivo
+      operationId: addCultivo
+      description: Adiciona un cultivo al sistema
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Cultivo
+        description: Adiciona un cultivo
+        schema:
+          $ref: '#/definitions/Cultivo'
+      responses:
+        201:
+          description: Cultivo creado
+        400:
+          description: Entrada invalida, cultivo inválido
+        409:
+          description: El cultivo ya existe
+    put:
+      tags:
+      - Administrador
+      summary: Actualizar Cultivo
+      description: Esta acción solamente puede ser ejecutada por un usuario logueado.
+      operationId: actualizarCultivo
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: query
+        description: Cultivo a actualizar
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: Objeto de cultivo actualizado
+        required: true
+        schema:
+          $ref: '#/definitions/Cultivo'
+      responses:
+        400:
+          description: Cultivo proporcionado no válido
+        404:
+          description: Cultivo no escontrado
+    delete:
+      tags:
+      - Administrador
+      summary: Borrar Cultivo
+      description: Esta acción solamente puede ser realizada por el usuario logueado. 
+      operationId: borrarCultivo
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: id
+        description: Cultivo a borrar
+        required: true
+        type: string
+      responses:
+        400:
+          description: Cultivo proporcionado no es válido
+        404:
+          description: Cultivo no encontrado
+definitions:
+  Controlador:
+    type: object
+    description: "Dispositivo que captura las mediciones de los sensores de temperatura, humedad, presión y los datos GPS correspondiente a la localización del dispositivo (latitud y longitud) "
+    required:
+    - id
+    - nombre
+    - estado
+    - fechainstalacion
+    - propietario
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      nombre:
+        type: string
+        example: Controlador OneUrbano V.0 
+      estado:
+        type: string
+        example: Bueno
+      fechainstalacion:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
+      propietario:
+        $ref: '#/definitions/Cliente'
+  Cultivo:
+    type: object
+    description: Cultivo que esta en cosecha brinda la información del nombre del cultivo y los parámetros de siembra.
+    required: 
+    - id
+    - nombre
+    - pTemperatura
+    - pPresion
+    - pHumedad
+    - ciclo
+    - propietario
+    properties:
+      id:
+        type: string
+        format: id
+        example: 1
+      nombre:
+        type: string
+        example: Tomate
+      pTemperatura:
+        type: string
+        format: float
+        example: 32
+        description: Parámetro de temperatura del cultivo en grados celcius
+      pPresion:
+        type: string
+        format: integer
+        example: 1016
+        description: Parámetro de presión del cultivo en hectopascales
+      pHumedad:
+        type: string
+        format: float
+        example: 16
+        description: Parámetro de humedad del cultivo en porcentaje 
+      ciclo:
+        type: integer
+        format: int64
+        example: 6
+        description: Parámetro de semanas que dura el cultivo
+      propietario:
+        $ref: '#/definitions/Cliente'  
+  Cliente:
+    type: object
+    description: "Propietario del cultivo a quien se le debe reportar el estado de este."
+    required: 
+    - id
+    - nombre
+    - apellido
+    - usuario
+    - contrasena
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 20202395003
+      nombre:
+        type: string
+        example: David Ricardo
+      apellido:
+        type: string
+        example: Colonia
+      usuario:
+        type: string
+        example: drcolonia
+      contrasena:
+        type: string
+        example: usuario12345
+  Actuador:
+    type: object
+    description: "Dispositivo de riego que actua cuando el controlador le envíe la instrucción de riego al detectar que la humedad del suelo esta por debajo de los parametros establecidos del cultivo."
+    required: 
+    - id
+    - nombre
+    - estado
+    - fechainstalacion
+    - propietario
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0552
+      nombre:
+        type: string
+        example: Actuador OneUrbano V.0 
+      estado:
+        type: string
+        example: Bueno
+      fechainstalacion:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
+      propietario:
+        $ref: '#/definitions/Cliente'
+  Mediciones:
+    type: object
+    description: "Corresponde a la lectura de los sensores que maneja el controlador cuyos registro se almacenara en la base de datos"
+    required: 
+    - id
+    - Temperatura
+    - Presion
+    - Humedad
+    - Latitud
+    - Longitud
+    - fechaMedicion
+    - controlador
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+      Temperatura:
+        type: string
+        format: float
+        example: 32
+        description: Lectura de temperatura del cultivo en grados celcius
+      Presion:
+        type: string
+        format: integer
+        example: 1016
+        description: Lectura de presión del cultivo en hectopascales
+      Humedad:
+        type: string
+        format: float
+        example: 16
+        description: Lectura de humedad del cultivo en porcentaje
+      Latitud:
+        type: string
+        format: float
+        example: 4,28475555
+        description: Lectura de la posición de latitud del cultivo
+      Longitud:
+        type: string
+        format: float
+        example: -74,28475555
+        description: Lectura de la posición de longitud del cultivo
+      fechaMedicion:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
+      controlador:
+        $ref: '#/definitions/Controlador'
+  Riego:
+    type: object
+    description: Corresponde al registro de riego ejecutador por el actuador cuando la humedad del suelo se encuentra por debajo de los parámetros del cultivo.
+    required: 
+    - id
+    - Volumen
+    - fechaRiego
+    - actuador
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+      Volumen:
+        type: string
+        format: float
+        example: 4,1
+        description: Corresponde a la cantidad de agua utilizada para el riego en centímetros cúbicos
+      fechaRiego:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
+      actuador:
+        $ref: '#/definitions/Actuador'
+  ApiAlertariego:
+    type: object
+    description: Envía una alerta al sistema de que ha ocurrido un riego.
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+        example: Se ha regado el cultivo
+  ApiRiego:
+    type: object
+    description: "Orden de riego que envía el módulo controlador al módulo actuador."
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+        example: Se ha regado el cultivo
+  ApiAlertacultivo:
+    type: object
+    description: Envía una alerta al sistema cuando se realiza una medición del cultivo.
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+        example: Se han registrado nuevos datos de las condiciones del cultivo
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /drcolonia/OneUrbano/1.0.0
+schemes:
+ - https
